@@ -3,314 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shopping Tools</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+    <title>Travel Wallet: THB-MYR</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+        /* --- THEME VARIABLES --- */
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.92);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --accent-color: #4f46e5;
-            --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            --bg-gradient: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-            --success-color: #10b981;
+            --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(255, 255, 255, 0.8);
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --input-focus: #ffffff;
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.3);
+            --success: #10b981;
+            --shadow-card: 0 15px 50px -10px rgba(0,0,0,0.15);
+            --shadow-input: inset 0 2px 4px rgba(0,0,0,0.03);
+            --toggle-bg: #f1f5f9;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --input-focus: rgba(15, 23, 42, 0.9);
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.3);
+            --success: #34d399;
+            --shadow-card: 0 15px 50px -10px rgba(0,0,0,0.6);
+            --shadow-input: inset 0 2px 4px rgba(0,0,0,0.2);
+            --toggle-bg: #334155;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Prompt', sans-serif;
             background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             padding: 15px;
-            color: var(--text-primary);
+            transition: background 0.5s ease;
         }
 
-        .main-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--card-border);
+            border-radius: 36px;
+            padding: 35px 30px;
             width: 100%;
-            max-width: 420px;
-            padding: 25px 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            max-width: 460px;
+            box-shadow: var(--shadow-card);
             position: relative;
             overflow: hidden;
-        }
-
-        /* --- Header Status --- */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .app-title { font-weight: 600; font-size: 16px; color: var(--text-primary); }
-        .live-badge {
-            font-size: 10px; font-weight: 700; color: var(--success-color);
-            background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 20px;
-            display: flex; align-items: center; gap: 5px;
-        }
-        .dot { width: 6px; height: 6px; background: var(--success-color); border-radius: 50%; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-        /* --- Tab Navigation --- */
-        .nav-tabs {
-            display: flex;
-            background: #f1f5f9;
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 10px;
-            border-radius: 12px;
-            font-family: 'Prompt', sans-serif;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
             transition: all 0.3s ease;
         }
-        .tab-btn.active {
-            background: #fff;
-            color: var(--accent-color);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+        /* --- Header & Toggle --- */
+        .header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
         }
-
-        /* --- Content Sections --- */
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Widget Styles (Clock/Weather) --- */
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .widget { background: #fff; border-radius: 18px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .widget-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .temp-badge { font-size: 11px; font-weight: 700; color: #f59e0b; background: #fffbeb; padding: 2px 6px; border-radius: 6px; }
-        .clock-time { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
-        .clock-sec { font-size: 12px; color: #94a3b8; }
-        .city-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* --- Input Styles --- */
-        .input-group { background: #fff; border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 2px solid transparent; transition: 0.2s; }
-        .input-group:focus-within { border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15); }
-        .label { font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 5px; }
-        .input-row { display: flex; justify-content: space-between; align-items: center; }
-        .symbol { font-weight: 700; color: var(--accent-color); background: #eef2ff; padding: 4px 8px; border-radius: 6px; font-size: 14px; }
-        input { width: 70%; border: none; outline: none; text-align: right; font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 700; background: transparent; color: var(--text-primary); }
-
-        /* --- Discount Specific --- */
-        .discount-options { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .pill-btn {
-            border: 1px solid #e2e8f0; background: #fff; padding: 6px 12px; border-radius: 20px;
-            font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap;
+        .app-title {
+            font-size: 1.6rem; font-weight: 700; color: var(--text-main);
+            display: flex; flex-direction: column; line-height: 1.1; letter-spacing: -0.5px;
         }
-        .pill-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+        .app-title span { font-size: 0.9rem; color: var(--text-sub); font-weight: 400; margin-top: 4px; letter-spacing: 0; }
         
-        .result-box {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 20px; padding: 20px; color: #fff; text-align: center; margin-top: 10px;
+        .theme-toggle {
+            background: var(--toggle-bg); border-radius: 50px; padding: 4px;
+            display: flex; align-items: center; cursor: pointer; position: relative;
+            width: 68px; height: 36px; transition: 0.3s;
         }
-        .result-label { font-size: 12px; opacity: 0.7; margin-bottom: 5px; }
-        .result-price { font-family: 'Inter', sans-serif; font-size: 32px; font-weight: 700; margin-bottom: 10px; }
-        .saved-badge { background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .toggle-icon {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: #f59e0b; font-size: 1rem;
+            position: absolute; left: 4px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        [data-theme="dark"] .toggle-icon { transform: translateX(32px); color: #6366f1; background: #1e293b; }
+        
+        /* --- Dashboard --- */
+        .dashboard {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;
+        }
+        .dash-card {
+            background: var(--input-bg); border-radius: 28px; padding: 18px 15px;
+            text-align: center; border: 1px solid var(--card-border);
+            transition: 0.3s; display: flex; flex-direction: column; align-items: center;
+        }
+        .dash-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+        
+        .dash-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; opacity: 0.9; }
+        .dash-flag { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .dash-country { font-size: 0.95rem; font-weight: 600; color: var(--text-sub); }
 
-        /* Helper */
-        .hidden { display: none; }
+        .dash-time { font-size: 2rem; font-weight: 700; color: var(--text-main); line-height: 1; margin: 4px 0; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+        
+        .dash-weather-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .w-icon { width: 52px; height: 52px; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15)); }
+        .w-temp { font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
+
+        /* --- Tabs --- */
+        .tabs {
+            display: flex; background: var(--toggle-bg); border-radius: 20px; padding: 5px; margin-bottom: 30px;
+        }
+        .tab-btn {
+            flex: 1; border: none; background: transparent; padding: 14px;
+            border-radius: 16px; font-family: 'Prompt'; font-weight: 600; color: var(--text-sub);
+            cursor: pointer; transition: 0.3s; font-size: 1rem;
+        }
+        .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        
+        .tab-content { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .tab-content.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Input Fields --- */
+        .input-wrapper { margin-bottom: 20px; position: relative; }
+        .input-label { font-size: 1rem; color: var(--text-sub); margin-bottom: 10px; margin-left: 8px; display: block; font-weight: 500; }
+        .input-box {
+            display: flex; align-items: center; background: var(--input-bg);
+            border-radius: 24px; padding: 8px 25px; border: 2px solid transparent;
+            box-shadow: var(--shadow-input); transition: 0.3s;
+        }
+        .input-box:focus-within {
+            background: var(--input-focus); border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+        input {
+            width: 100%; border: none; background: transparent;
+            font-size: 2.2rem; /* Larger Font */
+            font-weight: 600; color: var(--text-main);
+            padding: 15px 0; outline: none; font-family: 'Prompt';
+            letter-spacing: -0.5px;
+        }
+        input::placeholder { color: var(--text-sub); opacity: 0.4; font-weight: 400; }
+        .currency-tag {
+            display: flex; align-items: center; gap: 8px; font-weight: 700;
+            color: var(--text-main); font-size: 1.1rem; padding-left: 15px;
+            border-left: 2px solid var(--card-border); opacity: 0.9;
+        }
+
+        /* --- Swap Button --- */
+        .swap-area { position: relative; height: 24px; display: flex; justify-content: center; z-index: 10; margin: -10px 0 20px; }
+        .swap-btn {
+            width: 52px; height: 52px; border-radius: 50%; background: var(--primary);
+            border: 5px solid var(--card-bg); color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 8px 20px var(--primary-glow); transition: 0.3s; font-size: 1.2rem;
+        }
+        .swap-btn:active { transform: scale(0.9); }
+        .swap-btn:hover { transform: rotate(180deg) scale(1.05); }
+
+        /* --- Discount UI --- */
+        .disc-tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 25px 0; }
+        .disc-btn {
+            background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-sub);
+            padding: 12px; border-radius: 16px; font-family: 'Prompt'; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 1rem;
+        }
+        .disc-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .disc-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
+        
+        .disc-manual { grid-column: span 4; display: flex; align-items: center; gap: 15px; margin-top: 5px; }
+        .disc-manual input { font-size: 1.3rem; padding: 12px; text-align: center; border-radius: 16px; background: var(--input-bg); border: 1px solid var(--card-border); }
+
+        .result-card {
+            background: linear-gradient(135deg, var(--success), #059669);
+            border-radius: 30px; padding: 30px; color: white; text-align: center;
+            box-shadow: 0 15px 40px -10px rgba(16, 185, 129, 0.5); margin-top: 15px;
+        }
+        .res-label { font-size: 1rem; opacity: 0.95; margin-bottom: 8px; font-weight: 500; }
+        .res-big { font-size: 3rem; font-weight: 700; line-height: 1; letter-spacing: -1px; margin-bottom: 5px;}
+        .res-small { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; background: rgba(255,255,255,0.25); display: inline-block; padding: 6px 16px; border-radius: 24px; font-weight: 500; }
+
+        /* --- Footer --- */
+        .footer { margin-top: 35px; text-align: center; }
+        .live-status { font-size: 0.85rem; color: var(--success); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+        .live-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
+        .rate-text { font-size: 0.85rem; color: var(--text-sub); }
+        
+        .reset-link {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+            color: var(--text-sub); text-decoration: none; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; padding: 10px 24px; border-radius: 24px; transition: 0.2s;
+        }
+        .reset-link:hover { background: var(--toggle-bg); color: var(--text-main); }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-    <div class="main-card">
-        
-        <div class="status-bar">
-            <div class="app-title">Shopping Tools</div>
-            <div class="live-badge"><span class="dot"></span> ONLINE</div>
-        </div>
-
-        <div class="dashboard-grid">
-            <div class="widget">
-                <div class="widget-header">
-                    <span style="font-size:20px">🇹🇭</span>
-                    <span class="temp-badge" id="temp-th">..°C</span>
-                </div>
-                <div class="city-label">Bangkok</div>
-                <div class="clock-time" id="clock-th">00:00<span class="clock-sec">00</span></div>
+    <div class="container">
+        <div class="header">
+            <div class="app-title">
+                Travel Wallet
+                <span>THB &harr; MYR Converter</span>
             </div>
-            <div class="widget">
-                <div class="widget-header">
-                    <span style="font-size:20px">🇲🇾</span>
-                    <span class="temp-badge" id="temp-my">..°C</span>
-                </div>
-                <div class="city-label">Kuala Lumpur</div>
-                <div class="clock-time" id="clock-my">00:00<span class="clock-sec">00</span></div>
+            <div class="theme-toggle" id="theme-btn">
+                <div class="toggle-icon"><i class="fas fa-sun"></i></div>
             </div>
         </div>
 
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('currency')">💱 ค่าเงิน</button>
-            <button class="tab-btn" onclick="switchTab('discount')">🏷️ ส่วนลด</button>
-        </div>
-
-        <div id="view-currency" class="tab-content active">
-            <div class="input-group">
-                <span class="label">Thai Baht</span>
-                <div class="input-row">
-                    <span class="symbol">THB</span>
-                    <input type="number" id="thb" placeholder="0" inputmode="decimal">
+        <div class="dashboard">
+            <div class="dash-card">
+                <div class="dash-header">
+                    <img src="https://flagcdn.com/w40/th.png" class="dash-flag" alt="Thai">
+                    <span class="dash-country">ไทย</span>
+                </div>
+                <div class="dash-time" id="time-th">--:--</div>
+                <div class="dash-weather-row">
+                    <img id="icon-th" src="https://basmilius.github.io/weather-icons/production/fill/all/clear-day.svg" class="w-icon" alt="weather">
+                    <span class="w-temp" id="temp-th">--°C</span>
                 </div>
             </div>
-            
-            <div style="text-align:center; margin:-10px 0; position:relative; z-index:10;">
-                <button onclick="clearCurrency()" style="width:35px; height:35px; border-radius:50%; border:none; background:var(--accent-color); color:#fff; box-shadow:0 4px 10px rgba(79, 70, 229, 0.3); cursor:pointer;">⇅</button>
-            </div>
-
-            <div class="input-group">
-                <span class="label">Malaysian Ringgit</span>
-                <div class="input-row">
-                    <span class="symbol">MYR</span>
-                    <input type="number" id="myr" placeholder="0" inputmode="decimal">
+            <div class="dash-card">
+                <div class="dash-header">
+                    <img src="https://flagcdn.com/w40/my.png" class="dash-flag" alt="Malay">
+                    <span class="dash-country">มาเลเซีย</span>
                 </div>
-            </div>
-            <div style="text-align:center; font-size:12px; color:#64748b; margin-top:10px;" id="rate-display">Loading Rate...</div>
-        </div>
-
-        <div id="view-discount" class="tab-content">
-            <div class="input-group">
-                <span class="label">ราคาป้าย (Original Price)</span>
-                <div class="input-row">
-                    <span class="symbol">Price</span>
-                    <input type="number" id="price-input" placeholder="0" inputmode="decimal">
+                <div class="dash-time" id="time-my">--:--</div>
+                <div class="dash-weather-row">
+                    <img id="icon-my" src="https://basmilius.github.io/weather-icons/production/fill/all/clear-day.svg" class="w-icon" alt="weather">
+                    <span class="w-temp" id="temp-my">--°C</span>
                 </div>
-            </div>
-
-            <div class="input-group">
-                <span class="label">ส่วนลด (Discount %)</span>
-                <div class="input-row">
-                    <span class="symbol">% OFF</span>
-                    <input type="number" id="disc-input" placeholder="0" inputmode="decimal">
-                </div>
-            </div>
-
-            <div class="discount-options">
-                <button class="pill-btn" onclick="setDisc(10)">10%</button>
-                <button class="pill-btn" onclick="setDisc(20)">20%</button>
-                <button class="pill-btn" onclick="setDisc(30)">30%</button>
-                <button class="pill-btn" onclick="setDisc(50)">50%</button>
-                <button class="pill-btn" onclick="setDisc(70)">70%</button>
-            </div>
-
-            <div class="result-box">
-                <div class="result-label">ต้องจ่ายจริง (Final Price)</div>
-                <div class="result-price" id="final-price">0</div>
-                <div class="saved-badge">ประหยัดไป <span id="saved-amount">0</span></div>
             </div>
         </div>
 
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('converter')">แปลงค่าเงิน</button>
+            <button class="tab-btn" onclick="switchTab('discount')">ส่วนลดป้ายแดง</button>
+        </div>
+
+        <div id="converter" class="tab-content active">
+            <div class="input-wrapper">
+                <label class="input-label">จำนวนเงินบาท (THB)</label>
+                <div class="input-box">
+                    <input type="number" id="amount-one" placeholder="0">
+                    <div class="currency-tag">THB</div>
+                </div>
+            </div>
+
+            <div class="swap-area">
+                <div class="swap-btn" id="swap"><i class="fas fa-exchange-alt"></i></div>
+            </div>
+
+            <div class="input-wrapper">
+                <label class="input-label">จำนวนเงินริงกิต (MYR)</label>
+                <div class="input-box">
+                    <input type="number" id="amount-two" placeholder="0">
+                    <div class="currency-tag">MYR</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="discount" class="tab-content">
+            <div class="input-wrapper">
+                <label class="input-label">ราคาป้าย (เลือกสกุลเงินได้)</label>
+                <div class="input-box" style="padding-right: 10px;">
+                    <input type="number" id="disc-price" placeholder="ระบุราคา">
+                    <select id="disc-currency-select" style="border:none; background:var(--toggle-bg); padding:10px; border-radius:12px; font-family:'Prompt'; font-weight:600; color:var(--text-main); font-size:1rem; outline:none;">
+                        <option value="MYR">MYR</option>
+                        <option value="THB">THB</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="disc-tools">
+                <button class="disc-btn" data-val="10">10%</button>
+                <button class="disc-btn" data-val="20">20%</button>
+                <button class="disc-btn" data-val="30">30%</button>
+                <button class="disc-btn" data-val="50">50%</button>
+                <div class="disc-manual">
+                    <span style="font-size:1rem; color:var(--text-sub); white-space:nowrap;">หรือกรอก %:</span>
+                    <input type="number" id="disc-percent-manual" placeholder="0" style="width:100%;">
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="res-label">ต้องจ่ายจริง (Net Price)</div>
+                <div class="res-big"><span id="res-final">0.00</span> <span id="res-unit" style="font-size:1.5rem">MYR</span></div>
+                <div class="res-small">≈ <span id="res-converted">0.00</span> <span id="res-conv-unit">THB</span></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="live-status"><div class="live-dot"></div> Real-time Updates</div>
+            <div class="rate-text">Rate: <span id="exchange-rate">Checking...</span></div>
+            <div class="reset-link" onclick="resetAll()"><i class="fas fa-redo"></i> ล้างค่าเริ่มต้น</div>
+        </div>
     </div>
 
     <script>
-        // --- Tab Switching Logic ---
-        function switchTab(tabName) {
-            // Update Buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        // --- Theme Logic ---
+        const themeBtn = document.getElementById('theme-btn');
+        const icon = themeBtn.querySelector('i');
+        const body = document.body;
 
-            // Update Content
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(`view-${tabName}`).classList.add('active');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const current = body.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+        });
+
+        function updateIcon(theme) {
+            icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-        // --- System: Clock & Weather ---
-        function updateSystem() {
-            const now = new Date();
-            const format = (tz) => {
-                const parts = new Intl.DateTimeFormat('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit', timeZone:tz }).formatToParts(now);
-                return `${parts[0].value}:${parts[2].value}<span class="clock-sec">${parts[4].value}</span>`;
-            };
-            document.getElementById('clock-th').innerHTML = format('Asia/Bangkok');
-            document.getElementById('clock-my').innerHTML = format('Asia/Kuala_Lumpur');
-        }
-        setInterval(updateSystem, 1000);
-
-        async function fetchWeather() {
-            try {
-                const [bkk, kul] = await Promise.all([
-                    fetch("https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true").then(r=>r.json()),
-                    fetch("https://api.open-meteo.com/v1/forecast?latitude=3.14&longitude=101.69&current_weather=true").then(r=>r.json())
-                ]);
-                document.getElementById('temp-th').innerText = Math.round(bkk.current_weather.temperature) + "°C";
-                document.getElementById('temp-my').innerText = Math.round(kul.current_weather.temperature) + "°C";
-            } catch(e) {}
-        }
-        fetchWeather(); setInterval(fetchWeather, 600000);
-
-        // --- Feature 1: Currency Converter ---
-        let rate = 0;
-        const thbEl = document.getElementById('thb');
-        const myrEl = document.getElementById('myr');
+        // --- Logic Variables ---
+        let rateTHB_MYR = 0; 
+        let rateMYR_THB = 0;
         
-        async function getRate() {
+        // --- Elements ---
+        const amountOne = document.getElementById('amount-one');
+        const amountTwo = document.getElementById('amount-two');
+        const swapBtn = document.getElementById('swap');
+        let currencyOne = 'THB';
+
+        // --- Init Data ---
+        async function initData() {
+            await fetchRate();
+            fetchWeather();
+            setInterval(fetchRate, 60000); // 1 min
+            setInterval(fetchWeather, 300000); // 5 min
+            setInterval(updateClocks, 1000); // 1 sec
+            updateClocks();
+        }
+
+        async function fetchRate() {
             try {
                 const res = await fetch(`https://api.exchangerate-api.com/v4/latest/THB?t=${Date.now()}`);
                 const data = await res.json();
-                rate = data.rates.MYR;
-                document.getElementById('rate-display').innerText = `1 THB ≈ ${rate.toFixed(4)} MYR`;
-                if(thbEl.value) thbEl.dispatchEvent(new Event('input'));
-            } catch(e) { document.getElementById('rate-display').innerText = "Offline"; }
+                rateTHB_MYR = data.rates['MYR'];
+                rateMYR_THB = 1 / rateTHB_MYR;
+                
+                updateConverterUI();
+                updateDiscountUI();
+                document.getElementById('exchange-rate').innerText = `1 THB = ${rateTHB_MYR.toFixed(4)} MYR`;
+            } catch(e) { console.error("Rate Error", e); }
         }
-        getRate(); setInterval(getRate, 60000);
 
-        thbEl.addEventListener('input', () => {
-            const v = parseFloat(thbEl.value);
-            myrEl.value = isNaN(v) ? '' : (v * rate).toFixed(2);
+        // --- Weather Logic ---
+        async function fetchWeather() {
+            try {
+                const h = new Date().getHours();
+                const isDay = h >= 6 && h <= 18;
+
+                // TH Weather
+                const r1 = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=13.75&longitude=100.50&current_weather=true&t=${Date.now()}`);
+                const d1 = await r1.json();
+                updateWeatherCard('th', d1.current_weather, isDay);
+                
+                // MY Weather
+                const r2 = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=3.14&longitude=101.69&current_weather=true&t=${Date.now()}`);
+                const d2 = await r2.json();
+                updateWeatherCard('my', d2.current_weather, isDay);
+            } catch(e) { console.error("Weather Error", e); }
+        }
+
+        function updateWeatherCard(countryCode, weather, isDay) {
+            const tempEl = document.getElementById(`temp-${countryCode}`);
+            const iconEl = document.getElementById(`icon-${countryCode}`);
+            tempEl.innerText = `${Math.round(weather.temperature)}°C`;
+            const iconName = getIconName(weather.weathercode, isDay);
+            iconEl.src = `https://basmilius.github.io/weather-icons/production/fill/all/${iconName}.svg`;
+        }
+
+        function getIconName(code, isDay) {
+            if (code === 0) return isDay ? 'clear-day' : 'clear-night';
+            if (code >= 1 && code <= 3) return isDay ? 'partly-cloudy-day' : 'partly-cloudy-night';
+            if (code >= 45 && code <= 48) return 'fog';
+            if (code >= 51 && code <= 67) return 'rain';
+            if (code >= 80 && code <= 82) return 'rain';
+            if (code >= 95 && code <= 99) return 'thunderstorms-rain';
+            return 'not-available';
+        }
+
+        function updateClocks() {
+            const now = new Date();
+            const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+            document.getElementById('time-th').innerText = now.toLocaleTimeString('en-GB', {...opt, timeZone:'Asia/Bangkok'});
+            document.getElementById('time-my').innerText = now.toLocaleTimeString('en-GB', {...opt, timeZone:'Asia/Kuala_Lumpur'});
+        }
+
+        // --- Converter Logic ---
+        function updateConverterUI() {
+            const el = document.getElementById('exchange-rate');
+            if(currencyOne === 'THB') {
+                el.innerText = `1 THB = ${rateTHB_MYR.toFixed(4)} MYR`;
+                if(amountOne.value) amountTwo.value = (amountOne.value * rateTHB_MYR).toFixed(2);
+            } else {
+                el.innerText = `1 MYR = ${rateMYR_THB.toFixed(4)} THB`;
+                if(amountOne.value) amountTwo.value = (amountOne.value * rateMYR_THB).toFixed(2);
+            }
+        }
+
+        function calc(source) {
+            const r = currencyOne === 'THB' ? rateTHB_MYR : rateMYR_THB;
+            if(source === 'one') {
+                if(!amountOne.value) { amountTwo.value = ''; return; }
+                amountTwo.value = (amountOne.value * r).toFixed(2);
+            } else {
+                if(!amountTwo.value) { amountOne.value = ''; return; }
+                amountOne.value = (amountTwo.value / r).toFixed(2);
+            }
+        }
+
+        function swap() {
+            currencyOne = currencyOne === 'THB' ? 'MYR' : 'THB';
+            
+            const tags = document.querySelectorAll('.currency-tag');
+            const labels = document.querySelectorAll('.input-label');
+            
+            if(currencyOne === 'THB') {
+                labels[0].innerText = "จำนวนเงินบาท (THB)"; tags[0].innerText = "THB";
+                labels[1].innerText = "จำนวนเงินริงกิต (MYR)"; tags[1].innerText = "MYR";
+            } else {
+                labels[0].innerText = "จำนวนเงินริงกิต (MYR)"; tags[0].innerText = "MYR";
+                labels[1].innerText = "จำนวนเงินบาท (THB)"; tags[1].innerText = "THB";
+            }
+            
+            let temp = amountOne.value; amountOne.value = amountTwo.value; amountTwo.value = temp;
+            updateConverterUI();
+        }
+
+        amountOne.addEventListener('input', () => calc('one'));
+        amountTwo.addEventListener('input', () => calc('two'));
+        swapBtn.addEventListener('click', swap);
+
+        // --- Discount Logic ---
+        const discPrice = document.getElementById('disc-price');
+        const discSelect = document.getElementById('disc-currency-select');
+        const discManual = document.getElementById('disc-percent-manual');
+        const discBtns = document.querySelectorAll('.disc-btn');
+        let discountPct = 0;
+
+        discBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                discBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                discountPct = parseFloat(btn.dataset.val);
+                discManual.value = discountPct;
+                updateDiscountUI();
+            });
         });
-        myrEl.addEventListener('input', () => {
-            const v = parseFloat(myrEl.value);
-            thbEl.value = isNaN(v) ? '' : (v / rate).toFixed(2);
+
+        discManual.addEventListener('input', () => {
+            discBtns.forEach(b => b.classList.remove('active'));
+            let val = parseFloat(discManual.value);
+            if(val > 100) val = 100; if(val < 0) val = 0;
+            discountPct = isNaN(val) ? 0 : val;
+            updateDiscountUI();
         });
-        function clearCurrency() { thbEl.value=''; myrEl.value=''; thbEl.focus(); }
 
+        discPrice.addEventListener('input', updateDiscountUI);
+        discSelect.addEventListener('change', updateDiscountUI);
 
-        // --- Feature 2: Discount Calculator ---
-        const priceInput = document.getElementById('price-input');
-        const discInput = document.getElementById('disc-input');
-        const finalPriceEl = document.getElementById('final-price');
-        const savedAmountEl = document.getElementById('saved-amount');
+        function updateDiscountUI() {
+            const price = parseFloat(discPrice.value);
+            const curr = discSelect.value;
+            
+            if(!price) {
+                document.getElementById('res-final').innerText = "0.00";
+                document.getElementById('res-converted').innerText = "0.00";
+                return;
+            }
 
-        function calcDiscount() {
-            const price = parseFloat(priceInput.value) || 0;
-            const disc = parseFloat(discInput.value) || 0;
+            const net = price * ((100 - discountPct) / 100);
+            document.getElementById('res-final').innerText = net.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('res-unit').innerText = curr;
 
-            const saved = price * (disc / 100);
-            const final = price - saved;
-
-            // จัดรูปแบบตัวเลขให้สวยงาม (มีลูกน้ำคั่น)
-            finalPriceEl.innerText = final.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2});
-            savedAmountEl.innerText = saved.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+            let conv = 0;
+            if(curr === 'MYR') {
+                conv = net * rateMYR_THB;
+                document.getElementById('res-conv-unit').innerText = 'THB';
+            } else {
+                conv = net * rateTHB_MYR;
+                document.getElementById('res-conv-unit').innerText = 'MYR';
+            }
+            document.getElementById('res-converted').innerText = conv.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
         }
 
-        function setDisc(val) {
-            discInput.value = val;
-            calcDiscount();
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            if(tab === 'converter') btns[0].classList.add('active');
+            else btns[1].classList.add('active');
         }
 
-        priceInput.addEventListener('input', calcDiscount);
-        discInput.addEventListener('input', calcDiscount);
+        function resetAll() {
+            amountOne.value = ''; amountTwo.value = '';
+            discPrice.value = ''; discManual.value = '';
+            discountPct = 0;
+            discBtns.forEach(b => b.classList.remove('active'));
+            updateDiscountUI();
+            amountOne.focus();
+        }
 
+        initData();
     </script>
 </body>
 </html>
