@@ -8,54 +8,56 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
 
-        /* --- THEME VARIABLES --- */
+        /* --- THEME VARIABLES & ANIMATED COLORS --- */
         :root {
-            /* Light Mode Animation (Pastel) */
-            --bg-base: #f8fafc;
-            --orb-1: #a78bfa;
-            --orb-2: #f472b6;
-            --orb-3: #22d3ee;
+            /* Light Mode: Pastel Fluid */
+            --bg-base: #f0f4f8;
+            --blob-1: #ff9a9e;
+            --blob-2: #fad0c4;
+            --blob-3: #a18cd1;
+            --blob-4: #fbc2eb;
             
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-border: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(255, 255, 255, 0.6);
             --text-main: #1e293b;
             --text-sub: #64748b;
-            --input-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.5);
             --input-focus: #ffffff;
-            --primary: #4f46e5;
-            --primary-glow: rgba(79, 70, 229, 0.3);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.3);
             --success: #10b981;
             --warning: #f59e0b;
-            --shadow-card: 0 15px 35px -5px rgba(0,0,0,0.1);
-            --shadow-input: inset 0 2px 4px rgba(0,0,0,0.03);
-            --toggle-bg: #f1f5f9;
+            --shadow-card: 0 25px 50px -12px rgba(0,0,0,0.1);
+            --shadow-input: inset 0 2px 4px rgba(0,0,0,0.02);
+            --toggle-bg: #e2e8f0;
             --day-color: #f59e0b;
             --night-color: #6366f1;
-            --popup-overlay: rgba(248, 250, 252, 0.8);
+            --popup-overlay: rgba(240, 244, 248, 0.85);
             --switch-off: #cbd5e1;
         }
 
         [data-theme="dark"] {
-            /* Dark Mode Animation (Deep Space) */
-            --bg-base: #0f172a;
-            --orb-1: #4338ca;
-            --orb-2: #7c3aed;
-            --orb-3: #0ea5e9;
+            /* Dark Mode: Deep Nebula */
+            --bg-base: #020617;
+            --blob-1: #4c1d95;
+            --blob-2: #3b82f6;
+            --blob-3: #db2777;
+            --blob-4: #0f172a;
 
-            --card-bg: rgba(15, 23, 42, 0.75);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
+            --card-bg: rgba(15, 23, 42, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f1f5f9;
             --text-sub: #94a3b8;
-            --input-bg: rgba(30, 41, 59, 0.5);
+            --input-bg: rgba(30, 41, 59, 0.4);
             --input-focus: rgba(30, 41, 59, 0.8);
             --primary: #818cf8;
             --primary-glow: rgba(129, 140, 248, 0.4);
             --success: #34d399;
             --warning: #fbbf24;
-            --shadow-card: 0 20px 50px -12px rgba(0,0,0,0.6);
+            --shadow-card: 0 25px 50px -12px rgba(0,0,0,0.5);
             --shadow-input: inset 0 2px 4px rgba(0,0,0,0.3);
             --toggle-bg: #334155;
-            --popup-overlay: rgba(15, 23, 42, 0.85);
+            --popup-overlay: rgba(2, 6, 23, 0.85);
             --switch-off: #475569;
         }
 
@@ -73,47 +75,76 @@
             overflow-x: hidden; 
             overflow-y: auto; 
             position: relative;
-            transition: background-color 0.5s ease;
+            transition: background-color 0.8s ease;
         }
 
-        /* --- BACKGROUND ANIMATION --- */
-        .background-blobs {
+        /* --- MODERN FLUID BACKGROUND --- */
+        .background-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             overflow: hidden;
-            pointer-events: none;
+            background: var(--bg-base);
         }
 
-        .orb {
+        .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.5;
-            animation: float 10s infinite ease-in-out alternate;
+            filter: blur(80px);
+            opacity: 0.7;
+            animation: moveBlobs 20s infinite alternate;
         }
 
-        .orb-1 { background: var(--orb-1); width: 70vw; height: 70vw; top: -15%; left: -15%; animation-duration: 14s; }
-        .orb-2 { background: var(--orb-2); width: 60vw; height: 60vw; bottom: -15%; right: -15%; animation-duration: 16s; animation-direction: alternate-reverse; }
-        .orb-3 { background: var(--orb-3); width: 45vw; height: 45vw; top: 40%; left: 50%; transform: translate(-50%, -50%); animation-name: floatCenter; animation-duration: 20s; }
-
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(20px, 30px) scale(1.05); } }
-        @keyframes floatCenter { 
-            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); } 
-            50% { transform: translate(-50%, -60%) scale(1.1) rotate(20deg); } 
-            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); } 
+        /* ปรับรูปทรงให้บิดเบี้ยวเล็กน้อยเพื่อความเหมือนของเหลว */
+        .blob-1 {
+            top: -10%; left: -10%; width: 60vw; height: 60vw;
+            background: var(--blob-1);
+            animation-duration: 25s;
+        }
+        .blob-2 {
+            bottom: -10%; right: -10%; width: 70vw; height: 70vw;
+            background: var(--blob-2);
+            animation-duration: 30s;
+            animation-direction: alternate-reverse;
+        }
+        .blob-3 {
+            top: 40%; left: 40%; width: 50vw; height: 50vw;
+            background: var(--blob-3);
+            transform: translate(-50%, -50%);
+            animation-name: moveCenter;
+            animation-duration: 20s;
+        }
+        
+        /* เพิ่ม Layer Noise จางๆ เพื่อความสมจริง (Optional) */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.03; z-index: -1; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* --- CONTAINER --- */
+        @keyframes moveBlobs {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { transform: translate(30px, 50px) scale(1.1) rotate(15deg); border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            100% { transform: translate(-20px, -30px) scale(0.9) rotate(-10deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        }
+
+        @keyframes moveCenter {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-60%, -40%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* --- CONTAINER (Glassmorphism Upgrade) --- */
         .container {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            /* เพิ่มความเบลอให้กระจกดูหนาขึ้น */
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid var(--card-border);
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 25px 20px;
             width: 100%;
-            max-width: 350px; 
+            max-width: 360px; 
             box-shadow: var(--shadow-card);
             position: relative;
             z-index: 10;
@@ -145,7 +176,7 @@
         .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
         .dash-card {
-            background: var(--input-bg); border-radius: 16px; padding: 10px 8px;
+            background: var(--input-bg); border-radius: 18px; padding: 12px 8px;
             text-align: center; border: 1px solid var(--card-border);
             transition: 0.3s; display: flex; flex-direction: column; align-items: center;
         }
@@ -153,7 +184,7 @@
         .dash-flag { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .dash-country { font-size: 0.75rem; font-weight: 600; color: var(--text-sub); }
 
-        .dash-time { font-size: 1.3rem; font-weight: 700; color: var(--text-main); line-height: 1; margin: 2px 0; font-variant-numeric: tabular-nums; }
+        .dash-time { font-size: 1.3rem; font-weight: 700; color: var(--text-main); line-height: 1; margin: 4px 0; font-variant-numeric: tabular-nums; }
         
         .time-diff-badge {
             font-size: 0.6rem; font-weight: 600; padding: 2px 6px; border-radius: 8px;
@@ -164,7 +195,7 @@
 
         .dash-info-group {
             display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 6px; width: 100%; 
-            border-top: 1px solid rgba(0,0,0,0.05); padding-top: 4px;
+            border-top: 1px solid rgba(0,0,0,0.05); padding-top: 6px; margin-top: 2px;
         }
         
         .dn-status { font-size: 0.65rem; font-weight: 600; display: flex; align-items: center; gap: 3px; }
@@ -219,7 +250,7 @@
         /* --- Swap Button --- */
         .swap-area { position: relative; height: 14px; display: flex; justify-content: center; z-index: 10; margin: -6px 0 12px; }
         .swap-btn {
-            width: 38px; height: 38px; border-radius: 50%; background: var(--primary);
+            width: 40px; height: 40px; border-radius: 50%; background: var(--primary);
             border: 4px solid var(--card-bg); color: white; display: flex; align-items: center; justify-content: center;
             cursor: pointer; box-shadow: 0 4px 12px var(--primary-glow); transition: 0.3s; font-size: 0.9rem;
         }
@@ -230,7 +261,7 @@
         .disc-tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 15px 0; }
         .disc-btn {
             background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-sub);
-            padding: 8px 4px; border-radius: 10px; font-family: 'Prompt'; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.75rem;
+            padding: 8px 4px; border-radius: 12px; font-family: 'Prompt'; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.75rem;
         }
         .disc-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
         .disc-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
@@ -340,10 +371,11 @@
 </head>
 <body data-theme="light">
 
-    <div class="background-blobs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
+    <div class="background-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="noise-overlay"></div>
     </div>
 
     <div id="rate-popup" class="popup-overlay">
@@ -501,7 +533,7 @@
 
             <div class="footer-credit">
                 Design & Develop by <strong>Yutthapong R.</strong><br>
-                Version 1.0.0<br>
+                Version 1.0.1<br>
                 Copyright &copy; 2025 All Rights Reserved.
             </div>
         </div>
@@ -569,7 +601,6 @@
                 
                 updateConverterUI();
                 updateDiscountUI();
-                // แสดงทศนิยม 4 ตำแหน่งใน Rate Text เพื่อความแม่นยำ
                 document.getElementById('exchange-rate').innerText = `1 THB = ${rateTHB_MYR.toFixed(4)} MYR`;
 
             } catch(e) { console.error("Rate Error", e); }
@@ -589,7 +620,6 @@
             document.getElementById('rate-popup').classList.remove('active');
         }
 
-        // --- NEW NOTIFICATION LOGIC ---
         function toggleNotification(checkbox) {
             if (checkbox.checked) {
                 if (!("Notification" in window)) {
@@ -644,7 +674,6 @@
                 updateWeatherCard('th', d1.current_weather, isDay);
                 
                 // MY (Kuala Lumpur)
-                // Latitude: 3.1390, Longitude: 101.6869
                 const r2 = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=3.14&longitude=101.69&current_weather=true&t=${Date.now()}`);
                 const d2 = await r2.json();
                 updateWeatherCard('my', d2.current_weather, isDay);
@@ -673,9 +702,7 @@
             const now = new Date();
             const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
             
-            // TH Time
             const timeTH = now.toLocaleTimeString('en-GB', {...opt, timeZone:'Asia/Bangkok'});
-            // MY Time (Kuala Lumpur)
             const timeMY = now.toLocaleTimeString('en-GB', {...opt, timeZone:'Asia/Kuala_Lumpur'});
             
             document.getElementById('time-th').innerText = timeTH;
@@ -710,8 +737,6 @@
             let diff = (dTH - dMY) / (1000 * 60 * 60);
             diff = Math.round(diff); 
 
-            // diff จะเป็น -1 เพราะไทยช้ากว่ามาเลเซีย 1 ชม.
-            // แสดงผลตาม logic เดิมแต่เปลี่ยนชื่อประเทศ
             document.getElementById('diff-th').innerText = `ช้ากว่ามาเลฯ ${Math.abs(diff)} ชม.`;
             document.getElementById('diff-my').innerText = `เร็วกว่าไทย ${Math.abs(diff)} ชม.`;
         }
@@ -720,11 +745,9 @@
             const el = document.getElementById('exchange-rate');
             if(currencyOne === 'THB') {
                 el.innerText = `1 THB = ${rateTHB_MYR.toFixed(4)} MYR`;
-                
                 if(amountOne.value) amountTwo.value = (amountOne.value * rateTHB_MYR).toFixed(4);
             } else {
                 el.innerText = `1 MYR = ${rateMYR_THB.toFixed(4)} THB`;
-                
                 if(amountOne.value) amountTwo.value = (amountOne.value * rateMYR_THB).toFixed(4);
             }
         }
@@ -733,11 +756,9 @@
             const r = currencyOne === 'THB' ? rateTHB_MYR : rateMYR_THB;
             if(source === 'one') {
                 if(!amountOne.value) { amountTwo.value = ''; return; }
-                
                 amountTwo.value = (amountOne.value * r).toFixed(4);
             } else {
                 if(!amountTwo.value) { amountOne.value = ''; return; }
-                
                 amountOne.value = (amountTwo.value / r).toFixed(4);
             }
         }
